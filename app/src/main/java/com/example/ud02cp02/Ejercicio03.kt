@@ -1,9 +1,9 @@
 package com.example.ud02cp02
 
 fun main() {
-    println("Introduce un texto:")
+    print("Introduce un texto: ")
     val entrada = readLine() ?: ""
-    val texto = entrada.lowercase().replace(" ", "")
+    val texto = entrada.lowercase().filter { it.isLetter() }
     val frecuencias = mutableMapOf<Char, Int>()
 
     for (letra in texto) {

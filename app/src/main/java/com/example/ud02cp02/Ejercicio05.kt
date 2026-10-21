@@ -1,15 +1,15 @@
 package com.example.ud02cp02
 
-val asientos = mutableMapOf<String, Boolean>()
+val asientos = mutableMapOf<String, Boolean?>()
 val filas = 'A'..'E'
 
 fun main() {
-
     for (fila in filas) {
         for (num in 1..5) {
             asientos["$fila$num"] = false
         }
     }
+
     var salir = false
     while (!salir) {
         println("--- CINE ---")
@@ -23,7 +23,7 @@ fun main() {
             1 -> mostrarMapa()
             2 -> reservar()
             3 -> cancelar()
-            4 -> salir=true
+            4 -> salir = true
             else -> println("Opción no válida.")
         }
     }
@@ -48,7 +48,7 @@ fun reservar() {
     print("Asiento (ej. A1): ")
     val asiento = (readLine() ?: "").uppercase()
     try {
-        val disponible = asientos[asiento] ?: throw IllegalArgumentException("Asiento no existe")
+        val disponible = (asientos[asiento] as? Boolean) ?: throw IllegalArgumentException("Asiento no existe")
         if (disponible) throw IllegalStateException("Asiento ocupado")
         asientos[asiento] = true
         println("Reservado.")
@@ -61,7 +61,7 @@ fun cancelar() {
     print("Asiento (ej. A1): ")
     val asiento = (readLine() ?: "").uppercase()
     try {
-        val ocupado = asientos[asiento] ?: throw IllegalArgumentException("Asiento no existe")
+        val ocupado = (asientos[asiento] as? Boolean) ?: throw IllegalArgumentException("Asiento no existe")
         if (!ocupado) throw IllegalStateException("Asiento no está reservado")
         asientos[asiento] = false
         println("Cancelado.")

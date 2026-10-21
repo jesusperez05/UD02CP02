@@ -2,25 +2,25 @@ package com.example.ud02cp02
 
 val tareas = mutableListOf<String>()
 
-fun main() {
-    elegirOpcion()
+fun List<String>.obtenerPendientes(): List<String> {
+    return this.filter { !it.startsWith("[X]") }
 }
 
-fun elegirOpcion() {
-    menu()
-    print("Introduce un número: ")
-    var n: Int = readlnOrNull()?.toIntOrNull() ?: 0
-    when (n){
-        1 -> anadir()
-        2 -> completar()
-        3 -> listar()
-        4 -> {
-            val listaP=pendientes()
-            for (tarea in listaP)
-                println("Tarea: " + tarea)
-            elegirOpcion()
+fun main() {
+    var activo = true
+    while (activo) {
+        menu()
+        print("Introduce un número: ")
+        val n = readLine()?.toIntOrNull() ?: 0
+        when (n) {
+            1 -> anadir()
+            2 -> completar()
+            3 -> listar()
+            4 -> mostrarPendientes()
+            5 -> activo = false
+            else -> println("Opción no válida.")
         }
-        5 -> System.exit(0)
+        println()
     }
 }
 
@@ -34,26 +34,34 @@ fun menu() {
 
 fun anadir() {
     print("Introduce la tarea a hacer: ")
-    var tarea: String = readlnOrNull()!!
-    tareas.add(tarea)
-    elegirOpcion()
+    val tarea = readLine() ?: ""
+    if (tarea.isNotBlank()) {
+        tareas.add(tarea)
+    }
 }
 
 fun completar() {
-    print("Introduce el índice de la tarea a completar: ")
-    var indice: Int = readlnOrNull()?.toIntOrNull()!!
-    tareas.get(indice)
-    tareas[indice] += "[X]"
-    elegirOpcion()
+    print("Introduce el número de la tarea a completar: ")
+    val numero = readLine()?.toIntOrNull() ?: -1
+    if (numero in 1..tareas.size) {
+        val indice = numero - 1
+        if (!tareas[indice].startsWith("[X]")) {
+            tareas[indice] = "[X] " + tareas[indice]
+        }
+    } else {
+        println("Número de tarea no válido.")
+    }
 }
 
 fun listar() {
-    tareas.forEach {
-        println("Tarea " + tareas.indexOf(it.trim()) + ": " + it.trim())
+    for (i in tareas.indices) {
+        println("Tarea ${i + 1}: ${tareas[i]}")
     }
-    elegirOpcion()
 }
 
-fun pendientes(): List<String> {
-    return (tareas.filter { !it.endsWith("[X]") })
+fun mostrarPendientes() {
+    val listaP = tareas.obtenerPendientes()
+    for (tarea in listaP) {
+        println("Tarea: $tarea")
+    }
 }
